@@ -38,6 +38,17 @@ export default class Field extends React.PureComponent {
       ctx.fill();
       ctx.closePath();
     })
+
+  draw = (x,y) => {
+
+    this.paddleLeftY = 0
+    this.paddleRightY = this.refs.canvas.width - 10
+    let canvas = this.refs.canvas
+    let ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBall(x,y,ctx)
+    drawPaddles(this.paddleLeftY,ctx) //left paddle
+    drawPaddles(this.paddleRightY,ctx) //right paddle
   }
 
   drawCanvas = (x,y) => {
@@ -100,6 +111,6 @@ export default class Field extends React.PureComponent {
         ref="canvas" 
         height="500" 
         width="500" />
-    )
+      )
   }
 }
