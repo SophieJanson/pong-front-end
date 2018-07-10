@@ -21,20 +21,20 @@ export default class Field extends React.PureComponent {
     })
   }
 
-  drawBall = (x, y, canvas, ctx) => {
+  drawBall = (x, y, ctx) => {
     this.setState({
       ballX: x,
       ballY: y
     }, () => {
-      ctx.fillStyle = "#fff"
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
-  
       ctx.fillStyle = "#000";
       ctx.beginPath();
-      ctx.arc(x,y,5,0,2*Math.PI);
-      ctx.clearRect(0,0,ctx.width,ctx.height);
+      ctx.arc(x, y, 5, 0, 2 * Math.PI);
       ctx.fill();
     })
+  }
+
+  ballFlewOut = (x, canvas) => {
+    return x < 0  || x > canvas.width
   }
 
   movePaddle = () => {
@@ -62,10 +62,7 @@ export default class Field extends React.PureComponent {
 
   collide = () => {
     const { rightPaddleX, rightPaddleY, ballX, ballY } = this.state
-    console.log(rightPaddleX, ballX)
-    let collision = (ballY >= rightPaddleY && ballY <= (rightPaddleY + 100) && ballX === rightPaddleX) 
-    console.log(collision)
-    return !!collision
+    return (ballY >= rightPaddleY && ballY <= (rightPaddleY + 100) && ballX === rightPaddleX) 
   }
 
   render() {
