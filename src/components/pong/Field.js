@@ -1,72 +1,57 @@
 import * as React from 'react'
-import { moveBall } from './Ball'
+import { drawPaddles } from './Paddles'
+import { drawBall } from './Ball'
 
 export default class Field extends React.PureComponent {
-  state = {
-    leftPaddleY: 20,
-    rightPaddleY: 20,
-  }
 
   componentDidMount() {
-    let canvas = this.refs.canvas
-    let ctx = canvas.getContext('2d')
-    this.setState({
-      ballX: canvas.width / 2,
-      ballY: canvas.height / 2,
-      leftPaddleX: 0,
-      rightPaddleX: canvas.width - 10,
-    }, () => {
-      moveBall(canvas, ctx, this.state.ballX, this.state.ballY, this.collide, this.drawBall)
-      this.movePaddle()
-    })
+    this.serve()
   }
 
-  drawBall = (x, y, canvas, ctx) => {
-    this.setState({
-      ballX: x,
-      ballY: y
-    }, () => {
-      ctx.fillStyle = "#fff"
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
-  
-      ctx.fillStyle = "#000";
-      ctx.beginPath();
-      ctx.arc(x,y,5,0,2*Math.PI);
-      ctx.clearRect(0,0,ctx.width,ctx.height);
-      ctx.fill();
-    })
+  draw = (x,y) => {
+
+    this.paddleLeftY = 0
+    this.paddleRightY = this.refs.canvas.width - 10
+    let canvas = this.refs.canvas
+    let ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBall(x,y,ctx)
+    drawPaddles(this.paddleLeftY,ctx) //left paddle
+    drawPaddles(this.paddleRightY,ctx) //right paddle
   }
 
-  movePaddle = () => {
-    let x = 0,
-        y = 0
-    let canvas = this.refs.canvas
-    let ctx = canvas.getContext('2d')
+  serve = () => {
+    let x = 0
+    let y = 0
+    this.moveBall(x,y)
+  }
+
+  moveBall = (x,y) => {
+    let vx = 3
+    let vy = 6
+
     setInterval(() => {
-      this.drawLeftPaddle(canvas, ctx)
-      this.drawRightPaddle(canvas, ctx)
+      this.draw(x, y)
+      x += vx
+      y += vy
+      // if(collide()) {
+      //   vx = this.bounce(vx)
+      // } 
+      if(y >= this.refs.canvas.height || y <= 0 ) {
+        vy = this.bounce(vy)
+      }
     }, 1000/60)
   }
-
-  drawLeftPaddle = (canvas, ctx) => {
-    ctx.fillStyle = "#000"
-    ctx.fillRect(this.state.leftPaddleX, this.state.leftPaddleY, 10, 100)
-    ctx.fill()
+ 
+ bounce = (velocity) => {
+    return velocity * - 1
   }
 
-  drawRightPaddle = (canvas, ctx) => {
-    ctx.fillStyle = "#000"
-    ctx.fillRect(this.state.rightPaddleX, this.state.rightPaddleY, 10, 100)
-    ctx.fill()
-  }
-
-  collide = () => {
-    const { rightPaddleX, rightPaddleY, ballX, ballY } = this.state
-    console.log(rightPaddleX, ballX)
-    let collision = (ballY >= rightPaddleY && ballY <= (rightPaddleY + 100) && ballX === rightPaddleX) 
-    console.log(collision)
-    return !!collision
-  }
+  // collide = () => {
+  //   let collision = (ballY >= rightPaddleY && ballY <= (rightPaddleY + 100) && ballX === rightPaddleX) 
+  //   console.log(collision)
+  //   return !!collision
+  // }
 
   render() {
     return (
