@@ -1,23 +1,40 @@
 import * as React from 'react'
+import { moveBall } from './Ball'
 
 export default class Field extends React.PureComponent {
-
-  componentDidMount() {
-    this.moveBall()
-    this.movePaddle()
+  state = {
+    leftPaddleY: 20,
+    rightPaddleY: 20,
   }
 
-  moveBall = () => {
-    let x = 0,
-        y = 0
+  componentDidMount() {
     let canvas = this.refs.canvas
     let ctx = canvas.getContext('2d')
+    this.setState({
+      ballX: canvas.width / 2,
+      ballY: canvas.height / 2,
+      leftPaddleX: 0,
+      rightPaddleX: canvas.width - 10,
+    }, () => {
+      moveBall(canvas, ctx, this.state.ballX, this.state.ballY, this.collide, this.drawBall)
+      this.movePaddle()
+    })
+  }
 
-    setInterval(() => {
-      this.drawBall(x, y, canvas, ctx)
-      x +=2
-      y +=2
-    }, 1000/60)
+  drawBall = (x, y, canvas, ctx) => {
+    this.setState({
+      ballX: x,
+      ballY: y
+    }, () => {
+      ctx.fillStyle = "#fff"
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+  
+      ctx.fillStyle = "#000";
+      ctx.beginPath();
+      ctx.arc(x,y,5,0,2*Math.PI);
+      ctx.clearRect(0,0,ctx.width,ctx.height);
+      ctx.fill();
+    })
   }
 
   movePaddle = () => {
@@ -31,36 +48,29 @@ export default class Field extends React.PureComponent {
     }, 1000/60)
   }
 
-  drawBall = (x, y, canvas, ctx) => {
-    ctx.fillStyle = "#fff"
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
-
-    ctx.fillStyle = "#000";
-    ctx.beginPath();
-    ctx.arc(x,y,25,0,2*Math.PI);
-    ctx.clearRect(0,0,ctx.width,ctx.height);
-    ctx.fill();
-  }
-
-  bounce = (canvas, ctx) => {
-
-  }
-
   drawLeftPaddle = (canvas, ctx) => {
     ctx.fillStyle = "#000"
-    ctx.fillRect(0, 20, 10, 100)
+    ctx.fillRect(this.state.leftPaddleX, this.state.leftPaddleY, 10, 100)
     ctx.fill()
   }
 
   drawRightPaddle = (canvas, ctx) => {
     ctx.fillStyle = "#000"
-    ctx.fillRect(canvas.width - 10, 20, 10, 100)
+    ctx.fillRect(this.state.rightPaddleX, this.state.rightPaddleY, 10, 100)
     ctx.fill()
+  }
+
+  collide = () => {
+    const { rightPaddleX, rightPaddleY, ballX, ballY } = this.state
+    console.log(rightPaddleX, ballX)
+    let collision = (ballY >= rightPaddleY && ballY <= (rightPaddleY + 100) && ballX === rightPaddleX) 
+    console.log(collision)
+    return !!collision
   }
 
   render() {
     return (
-      <canvas ref="canvas" height="500" width="500" />
+      <canvas style={{border: '1px solid #000'}} ref="canvas" height="500" width="500" />
     )
   }
 }
