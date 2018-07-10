@@ -7,7 +7,6 @@ import {userId} from '../../jwt'
 import Paper from 'material-ui/Paper'
 import Field from './Field'
 import './GameDetails.css'
-import FileFileDownload from 'material-ui/SvgIcon';
 
 class GameDetails extends PureComponent {
 
