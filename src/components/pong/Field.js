@@ -1,62 +1,56 @@
 import * as React from 'react'
+import { drawPaddles, drawBall } from './Paddles'
 
 export default class Field extends React.PureComponent {
-
+  
   componentDidMount() {
-    this.moveBall()
-    this.movePaddle()
+    this.serve()
   }
 
-  moveBall = () => {
-    let x = 0,
-        y = 0
+  draw = (x,y) => {
     let canvas = this.refs.canvas
-    let ctx = canvas.getContext('2d')
+    let ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBall(x,y,ctx)
+    drawPaddles(0,ctx) //left paddle
+    drawPaddles(400,ctx) //right paddle
+
+  }
+
+  serve = () => {
+    let x = 0
+    let y = 0
+    this.moveBall(x,y)
+  }
+
+  moveBall = (x,y) => {
+    let vx = 3
+    let vy = 6
 
     setInterval(() => {
-      this.drawBall(x, y, canvas, ctx)
-      x +=2
-      y +=2
+      this.draw(x, y)
+      x += vx
+      y += vy
+      // if(collide()) {
+      //   vx = this.bounce(vx)
+      // } 
+      if(y >= this.refs.canvas.height || y <= 0 ) {
+        vy = this.bounce(vy)
+      }
     }, 1000/60)
   }
-
-  movePaddle = () => {
-    let x = 0,
-        y = 0
-    let canvas = this.refs.canvas
-    let ctx = canvas.getContext('2d')
-    setInterval(() => {
-      this.drawLeftPaddle(canvas, ctx)
-      this.drawRightPaddle(canvas, ctx)
-    }, 1000/60)
+ 
+ bounce = (velocity) => {
+    return velocity * - 1
   }
 
-  drawBall = (x, y, canvas, ctx) => {
-    ctx.fillStyle = "#fff"
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
-
-    ctx.fillStyle = "#000";
-    ctx.beginPath();
-    ctx.arc(x,y,25,0,2*Math.PI);
-    ctx.clearRect(0,0,ctx.width,ctx.height);
-    ctx.fill();
-  }
-
-  bounce = (canvas, ctx) => {
-
-  }
-
-  drawLeftPaddle = (canvas, ctx) => {
-    ctx.fillStyle = "#000"
-    ctx.fillRect(0, 20, 10, 100)
-    ctx.fill()
-  }
-
-  drawRightPaddle = (canvas, ctx) => {
-    ctx.fillStyle = "#000"
-    ctx.fillRect(canvas.width - 10, 20, 10, 100)
-    ctx.fill()
-  }
+  // collide = () => {
+  //   const { rightPaddleX, rightPaddleY, ballX, ballY } = this.state
+  //   console.log(rightPaddleX, ballX)
+  //   let collision = (ballY >= rightPaddleY && ballY <= (rightPaddleY + 100) && ballX === rightPaddleX) 
+  //   console.log(collision)
+  //   return !!collision
+  // }
 
   render() {
     return (
