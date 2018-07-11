@@ -84,6 +84,7 @@ class GameDetails extends PureComponent {
           players={game.players} 
           userId={this.props.userId} 
           updatePaddlesPos={this.updatePaddlesPos}
+          position={this.props.position}
         />
       }
     </Paper>)
@@ -94,7 +95,8 @@ const mapStateToProps = (state, props) => ({
   authenticated: state.currentUser !== null,
   userId: state.currentUser && userId(state.currentUser.jwt),
   game: state.games && state.games[props.match.params.id],
-  users: state.users
+  users: state.users,
+  position: state.games && state.games[props.match.params.id].position
 })
 
 const mapDispatchToProps = {

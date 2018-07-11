@@ -1,5 +1,6 @@
 import {ADD_GAME, UPDATE_GAME, UPDATE_GAMES } from '../actions/games'
 import {USER_LOGOUT} from '../actions/users'
+import { UPDATE_GAME_SUCCESS } from '../actions/positions';
 
 /*
 The state will contain the games in an object with the game ID as key
@@ -17,10 +18,15 @@ export default (state = null, {type, payload}) => {
       }
 
     case UPDATE_GAME:
-      return {
-        ...state,
-        [payload.id]: payload
-      }
+    const currentGame = state[payload.id]
+    currentGame.position = {
+      ...payload
+    }
+
+    return {
+      ...state,
+      [currentGame.id]: currentGame
+    }
 
     case UPDATE_GAMES:
       return payload.reduce((games, game) => {

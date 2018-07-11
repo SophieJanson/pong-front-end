@@ -16,11 +16,12 @@ export default class Controller {
         keys.up = value;
         break;
       case KEY.DOWN:
-        keys.down = value;
+        keys.down= value;
         break;
       default:
         return null
     }
+
     this.pressedKeys = keys;
   }
 

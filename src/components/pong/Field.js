@@ -18,7 +18,7 @@ class Field extends React.PureComponent {
 
   componentWillUnmount() {
     this.state.input.unbindKeys();
-  }
+  }   
 
   drawPaddles = (paddlex, paddley, ctx) => {
     var paddleHeight = 75;
@@ -62,7 +62,7 @@ class Field extends React.PureComponent {
       if (keys.up && this.state.leftPaddleY > 0) {
         this.setState({leftPaddleY: this.state.leftPaddleY - 8})
       }
-      this.props.updatePaddlesPos(this.state.leftPaddleY,side)
+      this.props.updatePaddlesPos(this.state.leftPaddleY, side)
     } else {
       if (keys.down && this.state.rightPaddleY < 425) {
         this.setState(
@@ -75,6 +75,11 @@ class Field extends React.PureComponent {
       this.props.updatePaddlesPos(this.state.rightPaddleY,side)
     }
   }
+
+  addKeyEventListeners = () => {
+    window.addEventListener('keyup', () => this.state.input.handleKeys(false));
+    window.addEventListener('keydown', () => this.state.input.handleKeys(true));
+  } 
 
   moveBall = (x,y, vx = -2, vy = 4) => {
     const playersPaddle = this.props.players.find(player => player.userId === this.props.userId).paddle
@@ -89,7 +94,14 @@ class Field extends React.PureComponent {
         clearInterval(interval)
         this.serve()
       }
-      this.updatePaddle(this.state.input.pressedKeys, playersPaddle)
+      if(this.state.input.pressedKeys.up || this.state.input.pressedKeys.down) {
+        this.updatePaddle(this.state.input.pressedKeys, playersPaddle)
+      }
+      this.setState( {
+        leftPaddleY: (this.props.position && this.props.position.left) || 0,
+        rightPaddleY: (this.props.position && this.props.position.right)  || 0,
+  
+      })
     }, 1000/60)
   }
 
@@ -99,19 +111,12 @@ class Field extends React.PureComponent {
 
   collide = (x, y, vx, vy) => {
     let targetPaddle
-    if(vx < 0) {
-      targetPaddle = 'left'
-    } else {
-      targetPaddle = 'right'
-    }
-
-    let collision
+    vx < 0 ? targetPaddle = 'left' : targetPaddle = 'right'
      if(targetPaddle === 'left') {
-      collision = ((x + vx) === (this.state.leftPaddleX + 10) && (y + vy) >= this.state.leftPaddleY && (y + vy) <= (this.state.leftPaddleY + 75))
+      return ((x + vx) === (this.state.leftPaddleX + 10) && (y + vy) >= this.state.leftPaddleY && (y + vy) <= (this.state.leftPaddleY + 75))
      } else {
-      collision = ((x + vx) === (this.state.rightPaddleX - 10) && (y + vy) >= this.state.rightPaddleY && (y + vy) <= (this.state.rightPaddleY + 75))
+      return ((x + vx) === (this.state.rightPaddleX - 10) && (y + vy) >= this.state.rightPaddleY && (y + vy) <= (this.state.rightPaddleY + 75))
      }
-    return collision
   }
 
   ballFlewOut = (x, y) => {
