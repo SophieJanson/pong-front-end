@@ -25,13 +25,13 @@ handleKeys(value, e){
     this.pressedKeys = keys;
   }
 
-bindKeys() {
-  window.addEventListener('keyup',   this.handleKeys.bind(this, false));
-  window.addEventListener('keydown', this.handleKeys.bind(this, true));
-}
+  bindKeys() {
+    window.addEventListener('keyup',   this.handleKeys.bind(this, false));
+    window.addEventListener('keydown', this.handleKeys.bind(this, true));
+  }
 
-unbindKeys() {
-    window.removeEventListener('keyup', this.handleKeys);
-    window.removeEventListener('keydown', this.handleKeys);
-}
+  unbindKeys() {
+      window.removeEventListener('keyup', this.handleKeys);
+      window.removeEventListener('keydown', this.handleKeys);
+  }
 }
