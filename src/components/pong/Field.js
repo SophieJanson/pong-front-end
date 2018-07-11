@@ -14,7 +14,6 @@ class Field extends React.PureComponent {
   componentDidMount() {
     this.serve()
     this.state.input.bindKeys();
-    console.log(this.state.input)
   }
 
   componentWillUnmount() {
@@ -54,7 +53,6 @@ class Field extends React.PureComponent {
   }
 
   updatePaddle = (keys, side) => {
-    console.log("keys")
     if(side === 'left') {
       if (keys.down && this.state.leftPaddleY < 425) {
         this.setState(
@@ -64,6 +62,7 @@ class Field extends React.PureComponent {
       if (keys.up && this.state.leftPaddleY > 0) {
         this.setState({leftPaddleY: this.state.leftPaddleY - 8})
       }
+      this.props.updatePaddlesPos(this.state.leftPaddleY,side)
     } else {
       if (keys.down && this.state.rightPaddleY < 425) {
         this.setState(
@@ -73,10 +72,12 @@ class Field extends React.PureComponent {
       if (keys.up && this.state.rightPaddleY > 0) {
         this.setState({rightPaddleY: this.state.rightPaddleY - 8})
       }
+      this.props.updatePaddlesPos(this.state.rightPaddleY,side)
     }
   }
 
   moveBall = (x,y, vx = -2, vy = 4) => {
+    const playersPaddle = this.props.players.find(player => player.userId === this.props.userId).paddle
     let interval = setInterval(() => {  
       this.drawCanvas(x, y)
       x += vx
@@ -88,7 +89,6 @@ class Field extends React.PureComponent {
         clearInterval(interval)
         this.serve()
       }
-      const playersPaddle = this.props.players.find(player => player.userId === this.props.userId).paddle
       this.updatePaddle(this.state.input.pressedKeys, playersPaddle)
     }, 1000/60)
   }

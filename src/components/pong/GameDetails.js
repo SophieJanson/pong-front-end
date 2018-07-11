@@ -7,6 +7,7 @@ import {userId} from '../../jwt'
 import Paper from 'material-ui/Paper'
 import Field from './Field'
 import './GameDetails.css'
+import {updatePositions} from '../../actions/positions'
 
 class GameDetails extends PureComponent {
 
@@ -31,6 +32,10 @@ class GameDetails extends PureComponent {
     updateGame(game.id, board)
   }
 
+  updatePaddlesPos = (paddley, paddle) => {
+    this.props.updatePositions(this.props.game.id, paddle, paddley)
+    console.log(`${paddle} paddle's position is ${paddley}`)
+  }
 
 
   render() {
@@ -75,7 +80,11 @@ class GameDetails extends PureComponent {
 
       {
         game.status !== 'pending' &&
-        <Field players={game.players} userId={this.props.userId}/>
+        <Field 
+          players={game.players} 
+          userId={this.props.userId} 
+          updatePaddlesPos={this.updatePaddlesPos}
+        />
       }
     </Paper>)
   }
@@ -89,7 +98,7 @@ const mapStateToProps = (state, props) => ({
 })
 
 const mapDispatchToProps = {
-  getGames, getUsers, joinGame, updateGame
+  getGames, getUsers, joinGame, updateGame, updatePositions
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameDetails)
