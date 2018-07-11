@@ -1,26 +1,24 @@
 import * as React from 'react'
 import Controller from './Controller'
+import { connect } from 'react-redux'
 
-export default class Field extends React.PureComponent {
-
+class Field extends React.PureComponent {
   state = {
     leftPaddleX: 0,
     rightPaddleX: 490,
     leftPaddleY: 0,
     rightPaddleY: 0,
-    inputLeft: new Controller(),
-    inputRight: new Controller()
+    input: new Controller()
   }
 
   componentDidMount() {
     this.serve()
-    this.state.inputLeft.bindKeys();
-    this.state.inputRight.bindKeys();
+    this.state.input.bindKeys();
+    console.log(this.state.input)
   }
 
   componentWillUnmount() {
-    this.state.inputLeft.unbindKeys();
-    this.state.inputRight.unbindKeys();
+    this.state.input.unbindKeys();
   }
 
   drawPaddles = (paddlex, paddley, ctx) => {
@@ -55,22 +53,26 @@ export default class Field extends React.PureComponent {
     this.drawPaddles(this.state.rightPaddleX, this.state.rightPaddleY,ctx) //right paddle
   }
 
-  updatePaddle = (keys) => {
-    if (keys.leftdown && this.state.leftPaddleY < 425) {
-      this.setState(
-        {leftPaddleY: this.state.leftPaddleY + 8}
-      )
-    }
-    if (keys.leftup && this.state.leftPaddleY > 0) {
-      this.setState({leftPaddleY: this.state.leftPaddleY - 8})
-    }
-    if (keys.rightdown && this.state.rightPaddleY < 425) {
-      this.setState(
-        {rightPaddleY: this.state.rightPaddleY + 8}
-      )
-    }
-    if (keys.rightup && this.state.rightPaddleY > 0) {
-      this.setState({rightPaddleY: this.state.rightPaddleY - 8})
+  updatePaddle = (keys, side) => {
+    console.log("keys")
+    if(side === 'left') {
+      if (keys.down && this.state.leftPaddleY < 425) {
+        this.setState(
+          {leftPaddleY: this.state.leftPaddleY + 8}
+        )
+      }
+      if (keys.up && this.state.leftPaddleY > 0) {
+        this.setState({leftPaddleY: this.state.leftPaddleY - 8})
+      }
+    } else {
+      if (keys.down && this.state.rightPaddleY < 425) {
+        this.setState(
+          {rightPaddleY: this.state.rightPaddleY + 8}
+        )
+      }
+      if (keys.up && this.state.rightPaddleY > 0) {
+        this.setState({rightPaddleY: this.state.rightPaddleY - 8})
+      }
     }
   }
 
@@ -86,11 +88,8 @@ export default class Field extends React.PureComponent {
         clearInterval(interval)
         this.serve()
       }
-
-      const keysLeft = this.state.inputLeft.pressedKeys;
-      const keysRight = this.state.inputRight.pressedKeys;
-      this.updatePaddle(keysLeft)
-      this.updatePaddle(keysRight)
+      const playersPaddle = this.props.players.find(player => player.userId === this.props.userId).paddle
+      this.updatePaddle(this.state.input.pressedKeys, playersPaddle)
     }, 1000/60)
   }
 
@@ -137,3 +136,11 @@ export default class Field extends React.PureComponent {
     )
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    games: state.games
+  }
+}
+
+export default connect(mapStateToProps)(Field)

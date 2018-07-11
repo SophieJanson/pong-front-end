@@ -75,7 +75,7 @@ class GameDetails extends PureComponent {
 
       {
         game.status !== 'pending' &&
-        <Field />
+        <Field players={game.players} userId={this.props.userId}/>
       }
     </Paper>)
   }
