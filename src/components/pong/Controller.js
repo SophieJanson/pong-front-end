@@ -1,22 +1,30 @@
 const KEY = {
-  UP: 38,
-  DOWN: 40
+  LEFTUP: 81,
+  LEFTDOWN: 65,
+  RIGHTUP: 38,
+  RIGHTDOWN: 40
  };
 
 export default class Controller {
-   constructor() {
-  this.pressedKeys = { up: 0, down: 0};
-}
+  constructor() {
+    this.pressedKeys = { leftup: 0, leftdown: 0, rightup: 0, rightdown: 0};
+  }
 
-handleKeys(value, e){
+  handleKeys(value, e){
     let keys = this.pressedKeys;
 
     switch (e.keyCode) {
-      case KEY.UP:
-        keys.up  = value;
+      case KEY.LEFTUP:
+        keys.leftup  = value;
         break;
-      case KEY.DOWN:
-        keys.down  = value;
+      case KEY.LEFTDOWN:
+        keys.leftdown  = value;
+        break;
+      case KEY.RIGHTUP:
+        keys.rightup  = value;
+        break;
+      case KEY.RIGHTDOWN:
+        keys.rightdown  = value;
         break;
       default:
         return null

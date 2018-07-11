@@ -8,12 +8,19 @@ export default class Field extends React.PureComponent {
     rightPaddleX: 490,
     leftPaddleY: 0,
     rightPaddleY: 0,
-    input: new Controller()
+    inputLeft: new Controller(),
+    inputRight: new Controller()
   }
 
   componentDidMount() {
     this.serve()
-    this.state.input.bindKeys();
+    this.state.inputLeft.bindKeys();
+    this.state.inputRight.bindKeys();
+  }
+
+  componentWillUnmount() {
+    this.state.inputLeft.unbindKeys();
+    this.state.inputRight.unbindKeys();
   }
 
   drawPaddles = (paddlex, paddley, ctx) => {
@@ -40,15 +47,6 @@ export default class Field extends React.PureComponent {
     })
   }
 
-  draw = (x,y) => {
-    let canvas = this.refs.canvas
-    let ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    this.drawBall(x,y,ctx)
-    this.drawPaddles(0, this.state.leftPaddleY,ctx) //left paddle
-    this.drawPaddles(this.state.rightPaddleX, 0,ctx) //right paddle
-  }
-
   drawCanvas = (x,y) => {
     let ctx = this.refs.canvas.getContext("2d");
     ctx.clearRect(0, 0, this.refs.canvas.width, this.refs.canvas.height);
@@ -58,14 +56,21 @@ export default class Field extends React.PureComponent {
   }
 
   updatePaddle = (keys) => {
-    if (keys.down && this.state.leftPaddleY < 425) {
+    if (keys.leftdown && this.state.leftPaddleY < 425) {
       this.setState(
-        {leftPaddleY: this.state.leftPaddleY + 8},
-         () => console.log(this.state)
+        {leftPaddleY: this.state.leftPaddleY + 8}
       )
     }
-    if (keys.up && this.state.leftPaddleY > 0) {
+    if (keys.leftup && this.state.leftPaddleY > 0) {
       this.setState({leftPaddleY: this.state.leftPaddleY - 8})
+    }
+    if (keys.rightdown && this.state.rightPaddleY < 425) {
+      this.setState(
+        {rightPaddleY: this.state.rightPaddleY + 8}
+      )
+    }
+    if (keys.rightup && this.state.rightPaddleY > 0) {
+      this.setState({rightPaddleY: this.state.rightPaddleY - 8})
     }
   }
 
@@ -82,8 +87,10 @@ export default class Field extends React.PureComponent {
         this.serve()
       }
 
-      const keys = this.state.input.pressedKeys;
-      this.updatePaddle(keys)
+      const keysLeft = this.state.inputLeft.pressedKeys;
+      const keysRight = this.state.inputRight.pressedKeys;
+      this.updatePaddle(keysLeft)
+      this.updatePaddle(keysRight)
     }, 1000/60)
   }
 
@@ -92,7 +99,6 @@ export default class Field extends React.PureComponent {
   }
 
   collide = (x, y, vx, vy) => {
-    console.log(this.state.leftPaddleY)
     let targetPaddle
     if(vx < 0) {
       targetPaddle = 'left'
