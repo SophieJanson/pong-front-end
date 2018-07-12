@@ -1,4 +1,4 @@
-import {ADD_GAME, UPDATE_GAME, UPDATE_GAMES } from '../actions/games'
+import {ADD_GAME, UPDATE_GAME, UPDATE_GAMES, UPDATE_GAME_STATUS } from '../actions/games'
 import {USER_LOGOUT} from '../actions/users'
 import { UPDATE_GAME_SUCCESS } from '../actions/positions';
 
@@ -18,14 +18,20 @@ export default (state = null, {type, payload}) => {
       }
 
     case UPDATE_GAME:
-    const currentGame = state[payload.id]
-    currentGame.position = {
-      ...payload
-    }
+      const currentGame = state[payload.id]
+      currentGame.position = {
+        ...payload
+      }
+  
+      return {
+        ...state,
+        [currentGame.id]: currentGame
+      }
 
+    case UPDATE_GAME_STATUS:
     return {
       ...state,
-      [currentGame.id]: currentGame
+      [payload.id]: payload
     }
 
     case UPDATE_GAMES:
