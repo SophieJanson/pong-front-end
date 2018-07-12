@@ -83,12 +83,22 @@ class Field extends React.PureComponent {
 
   moveBall = (x,y, vx = -2, vy = 4) => {
     const playersPaddle = this.props.players.find(player => player.userId === this.props.userId).paddle
+    vx = (this.props.position && this.props.position.vx) || vx
+    vy = (this.props.position && this.props.position.vy) || vy
     let interval = setInterval(() => {  
       this.drawCanvas(x, y)
+
       x += vx
       y += vy
-      if(this.collide(x, y, vx, vy)) vx = this.bounce(vx)
-      if(y >= this.refs.canvas.height || y <= 0 ) vy = this.bounce(vy)
+      if(this.collide(x, y, vx, vy)){
+        vx = this.bounce(vx)
+        this.props.updatePaddlesPos('vx', vx)
+      }
+
+      if(y >= this.refs.canvas.height || y <= 0 ) {
+        vy = this.bounce(vy)
+        this.props.updatePaddlesPos('vy', vy)
+      }
       
       if(this.ballFlewOut(x, y)) {
         clearInterval(interval)
@@ -97,11 +107,6 @@ class Field extends React.PureComponent {
       if(this.state.input.pressedKeys.up || this.state.input.pressedKeys.down) {
         this.updatePaddle(this.state.input.pressedKeys, playersPaddle)
       }
-      this.setState( {
-        leftPaddleY: (this.props.position && this.props.position.left) || 0,
-        rightPaddleY: (this.props.position && this.props.position.right)  || 0,
-  
-      })
     }, 1000/60)
   }
 
