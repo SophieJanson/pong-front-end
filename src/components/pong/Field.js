@@ -45,7 +45,7 @@ class Field extends React.PureComponent {
   }
 
   drawCanvas = (x,y) => {
-    let ctx = this.refs.canvas.getContext("2d");
+    const ctx = this.refs.canvas.getContext('2d')
     ctx.clearRect(0, 0, this.refs.canvas.width, this.refs.canvas.height);
     this.drawBall(x,y,ctx)
     this.drawPaddles(this.state.leftPaddleX, ( this.props.position && this.props.position.left) || this.state.leftPaddleY,ctx) //left paddle
@@ -56,23 +56,26 @@ class Field extends React.PureComponent {
     if(side === 'left') {
       if (keys.down && this.state.leftPaddleY < 425) {
         this.setState(
-          {leftPaddleY: this.state.leftPaddleY + 8}
+          {leftPaddleY: this.state.leftPaddleY + 8},
+          () => this.props.updatePaddlesPos(this.state.leftPaddleY, side)
         )
       }
       if (keys.up && this.state.leftPaddleY > 0) {
-        this.setState({leftPaddleY: this.state.leftPaddleY - 8})
+        this.setState({leftPaddleY: this.state.leftPaddleY - 8},
+        () => this.props.updatePaddlesPos(this.state.leftPaddleY, side)
+        )
       }
-      this.props.updatePaddlesPos(this.state.leftPaddleY, side)
     } else {
       if (keys.down && this.state.rightPaddleY < 425) {
         this.setState(
           {rightPaddleY: this.state.rightPaddleY + 8}
         )
+        this.props.updatePaddlesPos(this.state.rightPaddleY,side)
       }
       if (keys.up && this.state.rightPaddleY > 0) {
         this.setState({rightPaddleY: this.state.rightPaddleY - 8})
+        this.props.updatePaddlesPos(this.state.rightPaddleY,side)
       }
-      this.props.updatePaddlesPos(this.state.rightPaddleY,side)
     }
   }
 
@@ -85,19 +88,18 @@ class Field extends React.PureComponent {
     const playersPaddle = this.props.players.find(player => player.userId === this.props.userId).paddle
     vx = (this.props.position && this.props.position.vx) || vx
     vy = (this.props.position && this.props.position.vy) || vy
+    let ctx = this.refs.canvas.getContext("2d");
     let interval = setInterval(() => {  
-      this.drawCanvas(x, y)
+      this.drawCanvas(x, y, ctx)
 
       x += vx
       y += vy
-      if(this.collide(x, y, vx, vy)){
-        vx = this.bounce(vx)
-        this.props.updatePaddlesPos('vx', vx)
-      }
+
+      vx = this.collide(x, y, vx, vy)
 
       if(y >= this.refs.canvas.height || y <= 0 ) {
         vy = this.bounce(vy)
-        this.props.updatePaddlesPos('vy', vy)
+        this.props.updatePaddlesPos(vy, 'vy')
       }
       
       if(this.ballFlewOut(x, y)) {
@@ -118,13 +120,21 @@ class Field extends React.PureComponent {
     let targetPaddle
     vx < 0 ? targetPaddle = 'left' : targetPaddle = 'right'
      if(targetPaddle === 'left') {
-      return ((x + vx) === (this.state.leftPaddleX + 10) && (y + vy) >= this.state.leftPaddleY && (y + vy) <= (this.state.leftPaddleY + 75))
+      if(((x + vx) <= (this.state.leftPaddleX + 10) && (y + vy) >= this.state.leftPaddleY && (y + vy) <= (this.state.leftPaddleY + 75))) {
+        vx = this.bounce(vx)
+        this.props.updatePaddlesPos(vx, 'vx')
+      }
      } else {
-      return ((x + vx) === (this.state.rightPaddleX - 10) && (y + vy) >= this.state.rightPaddleY && (y + vy) <= (this.state.rightPaddleY + 75))
+      if(((x + vx) >= (this.state.rightPaddleX - 10) && (y + vy) >= this.state.rightPaddleY && (y + vy) <= (this.state.rightPaddleY + 75))) {
+        vx = this.bounce(vx)
+        this.props.updatePaddlesPos(vx, 'vx')
+      }
      }
+     return vx 
   }
 
   ballFlewOut = (x, y) => {
+    console.log("Fly baby:","x", x, "y", y)
     return x < 0 || x > this.refs.canvas.width
   }
 
