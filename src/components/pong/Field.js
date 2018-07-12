@@ -55,13 +55,14 @@ class Field extends React.PureComponent {
   }
 
   drawMiddleLine = (ctx) => {
-    ctx.fillStyle = '#fff'
-    ctx.setLineDash([5, 15]);
     ctx.beginPath();
-    ctx.moveTo(250,0);
-    ctx.lineTo(250, 500);
-    ctx.fill();
-  }
+    ctx.moveTo(this.refs.canvas.width/2,0);
+    ctx.lineTo(this.refs.canvas.width/2, this.refs.canvas.height);
+    ctx.lineWidth = 2;
+    // set line color
+    ctx.strokeStyle = 'white';
+    ctx.stroke();
+}
 
   updatePaddle = (keys, side) => {
     if(side === 'left') {
@@ -163,7 +164,7 @@ class Field extends React.PureComponent {
     return (
       <canvas
         className="outer-paper"
-        style={{border: '1px solid #000', background: "black"}} 
+        style={{background: "black"}} 
         ref="canvas" 
         height="500" 
         width="500" />  
