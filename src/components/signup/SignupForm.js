@@ -27,7 +27,21 @@ export default class SignupForm extends PureComponent {
   						this.state.email || ''
   					} onChange={ this.handleChange } />
           </label>
-  					
+
+  				<label>
+            First name
+  					<input type="text" name="firstName" value={
+  						this.state.firstName || ''
+  					} onChange={ this.handleChange } />
+  				</label>
+
+  				<label>
+            Last name
+  					<input type="text" name="lastName" value={
+  						this.state.lastName || ''
+  					} onChange={ this.handleChange } />
+  				</label>
+
   				<label>
             Password
   					<input type="password" name="password" value={

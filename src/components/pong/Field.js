@@ -18,6 +18,7 @@ class Field extends React.PureComponent {
 
   componentWillUnmount() {
     this.state.input.unbindKeys();
+    this.stopGame()
   }   
 
   drawPaddles = (paddlex, paddley, ctx) => {
@@ -35,7 +36,7 @@ class Field extends React.PureComponent {
       ballX: x,
       ballY: y
     }, () => {
-      var ballRadius = 10;
+      const ballRadius = 10;
       ctx.beginPath();
       ctx.arc(x, y, ballRadius, 0, Math.PI*2);
       ctx.fillStyle = "white";
@@ -47,11 +48,19 @@ class Field extends React.PureComponent {
   drawCanvas = (x,y) => {
     const ctx = this.refs.canvas.getContext('2d')
     ctx.clearRect(0, 0, this.refs.canvas.width, this.refs.canvas.height);
+    this.drawMiddleLine(ctx)
     this.drawBall(x,y,ctx)
     this.drawPaddles(this.state.leftPaddleX, ( this.props.position && this.props.position.left) || this.state.leftPaddleY,ctx) //left paddle
     this.drawPaddles(this.state.rightPaddleX, ( this.props.position && this.props.position.right) || this.state.rightPaddleY,ctx) //right paddle
   }
-
+  drawMiddleLine = (ctx) => {
+    ctx.fillStyle = '#fff'
+    ctx.setLineDash([5, 15]);
+    ctx.beginPath();
+    ctx.moveTo(250,0);
+    ctx.lineTo(250, 500);
+    ctx.fill();
+  }
   updatePaddle = (keys, side) => {
     if(side === 'left') {
       if (keys.down && this.state.leftPaddleY < 425) {
@@ -88,9 +97,8 @@ class Field extends React.PureComponent {
     const playersPaddle = this.props.players.find(player => player.userId === this.props.userId).paddle
     vx = (this.props.position && this.props.position.vx) || vx
     vy = (this.props.position && this.props.position.vy) || vy
-    let ctx = this.refs.canvas.getContext("2d");
-    let interval = setInterval(() => {  
-      this.drawCanvas(x, y, ctx)
+    this.interval = setInterval(() => {  
+      this.drawCanvas(x, y)
 
       x += vx
       y += vy
@@ -103,13 +111,17 @@ class Field extends React.PureComponent {
       }
       
       if(this.ballFlewOut(x, y)) {
-        clearInterval(interval)
+        this.stopGame(this.interval)
         this.serve()
       }
       if(this.state.input.pressedKeys.up || this.state.input.pressedKeys.down) {
         this.updatePaddle(this.state.input.pressedKeys, playersPaddle)
       }
     }, 1000/60)
+  }
+
+  stopGame = () => {
+    clearInterval(this.interval)
   }
 
   bounce = (velocity) => {
@@ -134,7 +146,6 @@ class Field extends React.PureComponent {
   }
 
   ballFlewOut = (x, y) => {
-    console.log("Fly baby:","x", x, "y", y)
     return x < 0 || x > this.refs.canvas.width
   }
 

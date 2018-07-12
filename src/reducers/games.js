@@ -29,7 +29,6 @@ export default (state = null, {type, payload}) => {
       }
 
     case UPDATE_GAME_STATUS:
-    console.log("p", payload, "status")
     return {
       ...state,
       [payload.id]: payload
