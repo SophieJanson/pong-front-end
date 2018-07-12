@@ -53,6 +53,7 @@ class Field extends React.PureComponent {
     this.drawPaddles(this.state.leftPaddleX, ( this.props.position && this.props.position.left) || this.state.leftPaddleY,ctx) //left paddle
     this.drawPaddles(this.state.rightPaddleX, ( this.props.position && this.props.position.right) || this.state.rightPaddleY,ctx) //right paddle
   }
+
   drawMiddleLine = (ctx) => {
     ctx.fillStyle = '#fff'
     ctx.setLineDash([5, 15]);
@@ -61,6 +62,7 @@ class Field extends React.PureComponent {
     ctx.lineTo(250, 500);
     ctx.fill();
   }
+
   updatePaddle = (keys, side) => {
     if(side === 'left') {
       if (keys.down && this.state.leftPaddleY < 425) {
@@ -132,12 +134,12 @@ class Field extends React.PureComponent {
     let targetPaddle
     vx < 0 ? targetPaddle = 'left' : targetPaddle = 'right'
      if(targetPaddle === 'left') {
-      if(((x + vx) <= (this.state.leftPaddleX + 10) && (y + vy) >= this.state.leftPaddleY && (y + vy) <= (this.state.leftPaddleY + 75))) {
+      if(((x + vx) <= (this.state.leftPaddleX + 10) && (y + vy) >= this.props.position.left && (y + vy) <= (this.props.position.left + 75))) {
         vx = this.bounce(vx)
         this.props.updatePaddlesPos(vx, 'vx')
       }
      } else {
-      if(((x + vx) >= (this.state.rightPaddleX - 10) && (y + vy) >= this.state.rightPaddleY && (y + vy) <= (this.state.rightPaddleY + 75))) {
+      if(((x + vx) >= (this.state.rightPaddleX - 10) && (y + vy) >= this.props.position.right && (y + vy) <= (this.props.position.right + 75))) {
         vx = this.bounce(vx)
         this.props.updatePaddlesPos(vx, 'vx')
       }
