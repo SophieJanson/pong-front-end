@@ -25,7 +25,7 @@ class Field extends React.PureComponent {
     var paddleWidth = 10;
     ctx.beginPath();
     ctx.rect(paddlex, paddley, paddleWidth, paddleHeight);
-    ctx.fillStyle = "#0095DD";
+    ctx.fillStyle = "white";
     ctx.fill();
     ctx.closePath();
   }
@@ -38,7 +38,7 @@ class Field extends React.PureComponent {
       var ballRadius = 10;
       ctx.beginPath();
       ctx.arc(x, y, ballRadius, 0, Math.PI*2);
-      ctx.fillStyle = "#0095DD";
+      ctx.fillStyle = "white";
       ctx.fill();
       ctx.closePath();
     })
@@ -48,8 +48,8 @@ class Field extends React.PureComponent {
     let ctx = this.refs.canvas.getContext("2d");
     ctx.clearRect(0, 0, this.refs.canvas.width, this.refs.canvas.height);
     this.drawBall(x,y,ctx)
-    this.drawPaddles(this.state.leftPaddleX, this.state.leftPaddleY,ctx) //left paddle
-    this.drawPaddles(this.state.rightPaddleX, this.state.rightPaddleY,ctx) //right paddle
+    this.drawPaddles(this.state.leftPaddleX, ( this.props.position && this.props.position.left) || this.state.leftPaddleY,ctx) //left paddle
+    this.drawPaddles(this.state.rightPaddleX, ( this.props.position && this.props.position.right) || this.state.rightPaddleY,ctx) //right paddle
   }
 
   updatePaddle = (keys, side) => {
@@ -134,7 +134,8 @@ class Field extends React.PureComponent {
   render() {
     return (
       <canvas
-        style={{border: '1px solid #000'}} 
+        className="outer-paper"
+        style={{border: '1px solid #000', background: "black"}} 
         ref="canvas" 
         height="500" 
         width="500" />  
