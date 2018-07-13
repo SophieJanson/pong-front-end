@@ -12,6 +12,7 @@ class Field extends React.PureComponent {
   }
 
   componentDidMount() {
+    
     this.countdown(5)
     this.state.input.bindKeys();
   }
@@ -43,6 +44,7 @@ class Field extends React.PureComponent {
     const canvas = this.refs.canvas
     context.clearRect(0,0,canvas.width,canvas.height)
   }
+  
 
   countdown = (x) => {     
     this.sec = x;  
@@ -152,6 +154,7 @@ class Field extends React.PureComponent {
       }
       
       if(this.ballFlewOut(x, y)) {
+        this.playSound("http://66.90.93.122/ost/warp-warp-game-sound-effect-arcade/dlyyvrlj/09%20Miss.mp3")
         this.stopGame(this.interval)
         const scoredPlayer = x < 1 ? 'right' : 'left'
         this.props.updatePaddlesPos(scoredPlayer, 'score')
@@ -178,14 +181,22 @@ class Field extends React.PureComponent {
       if(((x + vx) <= (this.state.leftPaddleX + 10) && (y + vy) >= this.props.position.left && (y + vy) <= (this.props.position.left + 75))) {
         vx = this.bounce(vx)
         this.props.updatePaddlesPos(vx, 'vx')
+        this.playSound("http://66.90.93.122/ost/warp-warp-game-sound-effect-arcade/sdvwmeca/01%20Credit%20Sound.mp3")
       }
      } else {
       if(((x + vx) >= (this.state.rightPaddleX - 10) && (y + vy) >= this.props.position.right && (y + vy) <= (this.props.position.right + 75))) {
         vx = this.bounce(vx)
         this.props.updatePaddlesPos(vx, 'vx')
+        this.playSound("http://66.90.93.122/ost/warp-warp-game-sound-effect-arcade/sdvwmeca/01%20Credit%20Sound.mp3")
       }
      }
+     
      return vx 
+  }
+
+  playSound = (x) => {
+    const sound = new Audio(x)
+    sound.play()
   }
 
   ballFlewOut = (x) => {
@@ -193,6 +204,7 @@ class Field extends React.PureComponent {
   }
 
   serve = () => {
+    
     let x = this.refs.canvas.height/2
     let y = this.refs.canvas.width/2
     this.moveBall(x, y)
