@@ -36,6 +36,11 @@ class GameDetails extends PureComponent {
     this.props.updatePositions(this.props.game.id, paddle, paddley)
   }
 
+  playSound = (x) => {
+    const sound = new Audio(x)
+    setInterval(sound.play(),1500)
+  }
+
 
   render() {
     const {game, users, authenticated, userId} = this.props
@@ -71,6 +76,7 @@ class GameDetails extends PureComponent {
 
       {
         game.winner &&
+        this.playSound("http://66.90.93.122/ost/warp-warp-game-sound-effect-arcade/fxaxxsyv/10%20Game%20Over.mp3") &&
         <p>Winner: {users[game.winner].firstName}</p>
       }
 

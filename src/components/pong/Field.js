@@ -12,8 +12,8 @@ class Field extends React.PureComponent {
 
   componentDidMount() {
     this.setState({
-      leftPaddleY: this.refs.canvas.height / 2,
-      rightPaddleY: this.refs.canvas.height / 2,
+      leftPaddleY: 213,
+      rightPaddleY: 213,
     })
     this.countdown(5, 'start')
     this.state.input.bindKeys();
