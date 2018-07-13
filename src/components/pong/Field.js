@@ -20,6 +20,7 @@ class Field extends React.PureComponent {
     this.state.input.unbindKeys();
     this.stopGame()
     clearInterval(this.id)
+    setTimeout(this.playSound("http://66.90.93.122/ost/warp-warp-game-sound-effect-arcade/fxaxxsyv/10%20Game%20Over.mp3"),5000)
   }   
 
   drawScoreLeft = (ctx) => {
