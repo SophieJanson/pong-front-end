@@ -12,14 +12,53 @@ class Field extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.serve()
+    this.countdown(5)
     this.state.input.bindKeys();
   }
 
   componentWillUnmount() {
     this.state.input.unbindKeys();
     this.stopGame()
+    clearInterval(this.id)
   }   
+
+  menu = () => {
+    const context = this.refs.canvas.getContext('2d')
+    const canvas = this.refs.canvas
+    context.fillStyle = 'white';
+    context.font = '36px Arial';
+    context.textAlign = 'center';
+    context.fillText("Let's Pongaisseur!", canvas.width / 2, canvas.height / 4);
+    context.font = '24px Arial';
+    context.fillText(`The game will start in ${this.sec} seconds...`, canvas.width / 2, canvas.height / 2);
+    context.font = '18px Arial'
+    context.fillText('Use up & down arrow keys to move', canvas.width / 2, (canvas.height / 4) * 3);
+    
+    // Start the game on a click
+    // canvas.addEventListener('click', () => this.serve());
+  }
+
+  clearCanv = () => {
+    const context = this.refs.canvas.getContext('2d')
+    const canvas = this.refs.canvas
+    context.clearRect(0,0,canvas.width,canvas.height)
+  }
+
+  countdown = (x) => {     
+    this.sec = x;  
+    this.id = setInterval(() => {
+      this.clearCanv()
+        this.menu()
+        this.sec--;
+        
+        if (this.sec < -1) {
+            clearInterval(this.id);
+            this.serve();
+            return;
+        }        
+    }, 1000)
+  }
+
 
   drawPaddles = (paddlex, paddley, ctx) => {
     var paddleHeight = 75;
@@ -102,10 +141,9 @@ class Field extends React.PureComponent {
     vy = (this.props.position && this.props.position.vy) || vy
     this.interval = setInterval(() => {  
       this.drawCanvas(x, y)
-
-      x += vx
-      y += vy
-
+      x += vx 
+      y += vy 
+      
       vx = this.collide(x, y, vx, vy)
 
       if(y >= this.refs.canvas.height || y <= 0 ) {
@@ -115,7 +153,7 @@ class Field extends React.PureComponent {
       
       if(this.ballFlewOut(x, y)) {
         this.stopGame(this.interval)
-        this.serve()
+        this.countdown(2)
       }
       if(this.state.input.pressedKeys.up || this.state.input.pressedKeys.down) {
         this.updatePaddle(this.state.input.pressedKeys, playersPaddle)
@@ -148,15 +186,13 @@ class Field extends React.PureComponent {
      return vx 
   }
 
-  ballFlewOut = (x, y) => {
+  ballFlewOut = (x) => {
     return x < 0 || x > this.refs.canvas.width
   }
 
   serve = () => {
     let x = this.refs.canvas.height/2
     let y = this.refs.canvas.width/2
-    let vx = Math.ceil(Math.random() * -5)
-    let vy = Math.ceil(Math.random() * 5)
     this.moveBall(x, y)
   }
 

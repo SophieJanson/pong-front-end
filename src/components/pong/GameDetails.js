@@ -34,7 +34,6 @@ class GameDetails extends PureComponent {
 
   updatePaddlesPos = (paddley, paddle) => {
     this.props.updatePositions(this.props.game.id, paddle, paddley)
-    console.log(`${paddle} paddle's position is ${paddley}`)
   }
 
 
@@ -60,9 +59,7 @@ class GameDetails extends PureComponent {
       <p>Status: {game.status}</p>
 
       {
-        game.status === 'started' &&
-        player && player.symbol === game.turn &&
-        <div>It's your turn!</div>
+        game.status === 'started' 
       }
 
       {
