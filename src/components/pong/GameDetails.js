@@ -39,7 +39,7 @@ class GameDetails extends PureComponent {
 
   playSound = (x) => {
     const sound = new Audio(x)
-    setInterval(sound.play(),1500)
+    sound.play()
   }
 
 
@@ -67,13 +67,9 @@ class GameDetails extends PureComponent {
       }
 
       {
-        this.playSound("http://66.90.93.122/ost/warp-warp-game-sound-effect-arcade/fxaxxsyv/10%20Game%20Over.mp3") &&
+        
         game.winner &&
-        <div>
           <p>Winner: {users[game.winner].firstName}</p>
-          <p>{users[player.userId].firstName}'s score: {player.score}</p>
-          <p>{users[opponent.userId].firstName}'s score: {opponent.score}</p>
-        </div>
       }
 
       <hr />
