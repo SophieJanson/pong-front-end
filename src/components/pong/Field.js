@@ -6,14 +6,16 @@ class Field extends React.PureComponent {
   state = {
     leftPaddleX: 0,
     rightPaddleX: 490,
-    leftPaddleY: 213,
-    rightPaddleY: 213,
+
     input: new Controller()
   }
 
   componentDidMount() {
-    
-    this.countdown(5)
+    this.setState({
+      leftPaddleY: this.refs.canvas.height / 2,
+      rightPaddleY: this.refs.canvas.height / 2,
+    })
+    this.countdown(5, 'start')
     this.state.input.bindKeys();
   }
 
@@ -23,20 +25,41 @@ class Field extends React.PureComponent {
     clearInterval(this.id)
   }   
 
-  menu = () => {
+  drawScoreLeft = (ctx) => {
+    const canvas = this.refs.canvas
+    ctx.fillStyle = '#fff';
+    ctx.font = '56px VT323, monospace';
+    let score = this.props.players.find(player => player.paddle === 'left').score
+    ctx.fillText(`${score}`, canvas.width / 4, canvas.height / 4);
+  }
+
+  drawScoreRight = (ctx) => {
+    const canvas = this.refs.canvas
+    ctx.fillStyle = '#fff';
+    ctx.font = '56px VT323, monospace';
+    let score = this.props.players.find(player => player.paddle === 'right').score
+    ctx.fillText(`${score}`, (canvas.width / 4) * 3, canvas.height / 4);
+  }
+
+  menu = (textToRender) => {
     const context = this.refs.canvas.getContext('2d')
     const canvas = this.refs.canvas
     context.fillStyle = 'white';
     context.font = '46px VT323, monospace';
     context.textAlign = 'center';
-    context.fillText("Let's Pongaisseur!", canvas.width / 2, canvas.height / 4);
-    context.font = '36px VT323, monospace';
-    context.fillText(`The game will start in ${this.sec} seconds...`, canvas.width / 2, canvas.height / 2);
-    context.font = '30px VT323, monospace'
-    context.fillText('Use up & down arrow keys to move', canvas.width / 2, (canvas.height / 4) * 3);
-    
-    // Start the game on a click
-    // canvas.addEventListener('click', () => this.serve());
+    if(textToRender === 'start') {
+      context.fillText("Let's Pongaisseur!", canvas.width / 2, canvas.height / 4);
+      context.font = '36px VT323, monospace';
+      context.fillText(`The game will start in ${this.sec} seconds...`, canvas.width / 2, canvas.height / 2);
+      context.font = '30px VT323, monospace'
+      context.fillText('Use up & down arrow keys to move', canvas.width / 2, (canvas.height / 4) * 3);
+    } else {
+      context.fillText("SCORE!", canvas.width / 2, canvas.height / 4);
+      context.font = '36px VT323, monospace';
+      context.fillText(`Restart in ${this.sec} seconds...`, canvas.width / 2, canvas.height / 2);
+    }
+
+
   }
 
   clearCanv = () => {
@@ -46,11 +69,11 @@ class Field extends React.PureComponent {
   }
   
 
-  countdown = (x) => {     
+  countdown = (x, textToRender) => {     
     this.sec = x;  
     this.id = setInterval(() => {
       this.clearCanv()
-        this.menu()
+        this.menu(textToRender)
         this.sec--;
         
         if (this.sec < -1) {
@@ -91,6 +114,8 @@ class Field extends React.PureComponent {
     ctx.clearRect(0, 0, this.refs.canvas.width, this.refs.canvas.height);
     this.drawMiddleLine(ctx)
     this.drawBall(x,y,ctx)
+    this.drawScoreLeft(ctx)
+    this.drawScoreRight(ctx)
     this.drawPaddles(this.state.leftPaddleX, ( this.props.position && this.props.position.left) || this.state.leftPaddleY,ctx) //left paddle
     this.drawPaddles(this.state.rightPaddleX, ( this.props.position && this.props.position.right) || this.state.rightPaddleY,ctx) //right paddle
   }
@@ -158,7 +183,7 @@ class Field extends React.PureComponent {
         this.stopGame(this.interval)
         const scoredPlayer = x < 1 ? 'right' : 'left'
         this.props.updatePaddlesPos(scoredPlayer, 'score')
-        this.countdown(2)
+        this.countdown(2, 'score')
       }
       if(this.state.input.pressedKeys.up || this.state.input.pressedKeys.down) {
         this.updatePaddle(this.state.input.pressedKeys, playersPaddle)
