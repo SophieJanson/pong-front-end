@@ -6,15 +6,18 @@ class Field extends React.PureComponent {
   state = {
     leftPaddleX: 0,
     rightPaddleX: 490,
-
+    leftPaddleY: 213,
+    rightPaddleY: 213,
     input: new Controller()
   }
 
   componentDidMount() {
-    this.setState({
-      leftPaddleY: this.refs.canvas.height / 2,
-      rightPaddleY: this.refs.canvas.height / 2,
-    })
+    // this.refs.canvas.height = window.innerHeight
+    // this.refs.canvas.width = this.refs.canvas.height * 1.5
+    // this.setState({
+    //   rightPaddleX: this.refs.canvas.width - 10
+    // })
+
     this.countdown(5, 'start')
     this.state.input.bindKeys();
   }
@@ -58,7 +61,6 @@ class Field extends React.PureComponent {
       context.font = '36px VT323, monospace';
       context.fillText(`Restart in ${this.sec} seconds...`, canvas.width / 2, canvas.height / 2);
     }
-
 
   }
 

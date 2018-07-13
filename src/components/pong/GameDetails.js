@@ -5,6 +5,7 @@ import {getGames, joinGame, updateGame} from '../../actions/games'
 import {getUsers} from '../../actions/users'
 import {userId} from '../../jwt'
 import Paper from 'material-ui/Paper'
+import Button from 'material-ui/Button'
 import Field from './Field'
 import './GameDetails.css'
 import {updatePositions} from '../../actions/positions'
@@ -54,24 +55,19 @@ class GameDetails extends PureComponent {
       <h1>Game #{game.id}</h1>
 
       <p>Status: {game.status}</p>
-
-
-      {
-        game.status === 'started'  &&
-        <div>
-        <p>{users[player.userId].firstName}'s score: {player.score} {users[opponent.userId].firstName}'s score: {opponent.score}</p>
-        </div>
-      }
-
       {
         game.status === 'pending' && 
         game.players.map(p => p.userId).indexOf(userId) === -1 &&
-        <button onClick={this.joinGame}>Join Game</button>
+        <Button onClick={this.joinGame}>Join Game</Button>
       }
 
       {
         game.winner &&
-        <p>Winner: {users[game.winner].firstName}</p>
+        <div>
+          <p>Winner: {users[game.winner].firstName}</p>
+          <p>{users[player.userId].firstName}'s score: {player.score}</p>
+          <p>{users[opponent.userId].firstName}'s score: {opponent.score}</p>
+        </div>
       }
 
       <hr />
