@@ -19,24 +19,24 @@ const TopBar = (props) => {
         </Typography>
         {
           user &&
-          <Button color="inherit"><AccountIcon /> { user.firstName }</Button>
+          <Button color="inherit" style={{fontFamily: 'VT323, monospace', fontSize: '1.2em'}}><AccountIcon /> { user.firstName }</Button>
         }
 
         {
           location.pathname.indexOf('signup') > 0 &&
-          <Button color="inherit" onClick={() => history.push('/login')}>Login</Button>
+          <Button color="inherit" style={{fontFamily: 'VT323, monospace', fontSize: '1.6em'}} onClick={() => history.push('/login')}>Login</Button>
         }
         {
           location.pathname.indexOf('login') > 0 &&
-          <Button color="inherit" onClick={() => history.push('/signup')}>Sign up</Button>
+          <Button color="inherit" style={{fontFamily: 'VT323, monospace', fontSize: '1.6em'}} onClick={() => history.push('/signup')}>Sign up</Button>
         }
         {
           location.pathname.indexOf('games/') > 0 &&
-          <Button color="inherit" onClick={() => history.push('/games')}>All Games</Button>
+          <Button color="inherit" style={{fontFamily: 'VT323, monospace', fontSize: '1.2em'}} onClick={() => history.push('/games')}>All Games</Button>
         }
         {
           /games$/.test(location.pathname) &&
-          <Button color="inherit" onClick={() => history.push('/logout')}>Log out</Button>
+          <Button color="inherit" style={{fontFamily: 'VT323, monospace', fontSize: '1.2em'}} onClick={() => history.push('/logout')}>Log out</Button>
         }
       </Toolbar>
     </AppBar>

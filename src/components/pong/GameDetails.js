@@ -48,6 +48,7 @@ class GameDetails extends PureComponent {
     if (!game) return 'Not found'
 
     const player = game.players.find(p => p.userId === userId)
+    const opponent = game.players.find(p => p.userId !== userId)
 
     const winner = game.players
       .filter(p => p.symbol === game.winner)
@@ -58,8 +59,12 @@ class GameDetails extends PureComponent {
 
       <p>Status: {game.status}</p>
 
+
       {
-        game.status === 'started' 
+        game.status === 'started'  &&
+        <div>
+        <p>{users[player.userId].firstName}'s score: {player.score} {users[opponent.userId].firstName}'s score: {opponent.score}</p>
+        </div>
       }
 
       {

@@ -6,8 +6,8 @@ class Field extends React.PureComponent {
   state = {
     leftPaddleX: 0,
     rightPaddleX: 490,
-    leftPaddleY: 0,
-    rightPaddleY: 0,
+    leftPaddleY: 213,
+    rightPaddleY: 213,
     input: new Controller()
   }
 
@@ -26,12 +26,12 @@ class Field extends React.PureComponent {
     const context = this.refs.canvas.getContext('2d')
     const canvas = this.refs.canvas
     context.fillStyle = 'white';
-    context.font = '36px Arial';
+    context.font = '46px VT323, monospace';
     context.textAlign = 'center';
     context.fillText("Let's Pongaisseur!", canvas.width / 2, canvas.height / 4);
-    context.font = '24px Arial';
+    context.font = '36px VT323, monospace';
     context.fillText(`The game will start in ${this.sec} seconds...`, canvas.width / 2, canvas.height / 2);
-    context.font = '18px Arial'
+    context.font = '30px VT323, monospace'
     context.fillText('Use up & down arrow keys to move', canvas.width / 2, (canvas.height / 4) * 3);
     
     // Start the game on a click
