@@ -153,6 +153,8 @@ class Field extends React.PureComponent {
       
       if(this.ballFlewOut(x, y)) {
         this.stopGame(this.interval)
+        const scoredPlayer = x < 1 ? 'right' : 'left'
+        this.props.updatePaddlesPos(scoredPlayer, 'score')
         this.countdown(2)
       }
       if(this.state.input.pressedKeys.up || this.state.input.pressedKeys.down) {
