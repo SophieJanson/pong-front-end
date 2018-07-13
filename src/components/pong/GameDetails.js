@@ -64,7 +64,7 @@ class GameDetails extends PureComponent {
       }
 
       {
-        game.status === 'pending' &&
+        game.status === 'pending' && 
         game.players.map(p => p.userId).indexOf(userId) === -1 &&
         <button onClick={this.joinGame}>Join Game</button>
       }
@@ -83,6 +83,8 @@ class GameDetails extends PureComponent {
           userId={this.props.userId} 
           updatePaddlesPos={this.updatePaddlesPos}
           position={this.props.position}
+          users={this.props.users}
+          winner={this.props.game.winner || null}
         />
       }
     </Paper>)
