@@ -1,10 +1,5 @@
 import {ADD_GAME, UPDATE_GAME_POSITION, UPDATE_GAMES, UPDATE_GAME_STATUS, UPDATE_GAME_SCORE } from '../actions/games'
 import {USER_LOGOUT} from '../actions/users'
-import { UPDATE_GAME_SUCCESS } from '../actions/positions';
-
-/*
-The state will contain the games in an object with the game ID as key
-*/
 
 export default (state = null, {type, payload}) => {
   switch (type) {
