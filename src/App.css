@@ -1,10 +1,15 @@
+/* @font-face {
+  font-family: bit5by5;
+  src: url('static/fonts/bit5x5.woff')
+} */
+
+@import url('https://fonts.googleapis.com/css?family=VT323');
+
+body {
+  font-family: 'Space Mono', monospace;
+}
 .App {
   text-align: center;
-}
-
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
 }
 
 .App-header {
@@ -20,9 +25,4 @@
 
 .App-intro {
   font-size: large;
-}
-
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
 }

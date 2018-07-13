@@ -15,7 +15,7 @@ class GamesList extends PureComponent {
       if (this.props.games === null) this.props.getGames()
       if (this.props.users === null) this.props.getUsers()
     }
-  }
+  } 
 
   renderGame = (game) => {
     const {users, history} = this.props
